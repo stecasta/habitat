@@ -18,7 +18,7 @@
             align-items: center;
         }
         h1 {
-            color: #333;
+            color: #4169e1; /* Changed to blue */
         }
         .date {
             color: #777;
@@ -35,7 +35,7 @@
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #4169e1; /* Changed to blue */
             color: white;
         }
         tr:hover {
@@ -45,7 +45,7 @@
             padding: 10px 20px;
             margin-top: 10px;
             border: none;
-            background-color: #4CAF50;
+            background-color: #4169e1; /* Changed to blue */
             color: white;
             cursor: pointer;
         }
@@ -64,7 +64,7 @@
             overflow: auto;
             background-color: rgb(0,0,0);
             background-color: rgba(0,0,0,0.4);
-            padding-top: 100px;
+            padding-top: 60px;
         }
         .modal-content {
             background-color: #fefefe;
@@ -81,11 +81,29 @@
             cursor: pointer;
         }
         .check-in-message {
-            color: green;
             font-weight: bold;
             padding: 10px;
             margin-top: 10px;
             text-align: center;
+        }
+        /* Added status colors */
+        .status-positive {
+            color: green;
+        }
+        .status-negative {
+            color: red;
+        }
+        .status-neutral {
+            color: #555;
+        }
+        /* Added styles for the set back button */
+        .set-back-btn {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background-color: #dc3545; /* Bootstrap's .btn-danger color */
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -100,9 +118,14 @@
         onclick="document.getElementById('checkInModal').style.display='block'"
         {{ 'disabled' if already_checked_in }}>Daily Check-In</button>
 
+    <!-- Set Back Last Check-In Date Button -->
+    <form method="POST" action="/set-back-last-checked-in">
+        <button type="submit" class="set-back-btn">Set Back Last Checked-In</button>
+    </form>
+
     <!-- Display a message if already checked in for today -->
     {% if already_checked_in %}
-    <p class="check-in-message">Already checked in for today.</p>
+    <p class="check-in-message status-neutral">Already checked in for today.</p>
     {% endif %}
 
     <!-- The Modal -->
@@ -135,7 +158,19 @@
             {% for habit in habits %}
             <tr>
                 <td>{{ habit.name }}</td>
-                <td>{{ habit.current_status }}</td>
+                <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
+                    {% if habit.streak == 1 %}
+                    Positive streak of 1 day
+                    {% elif habit.streak > 1 %}
+                    Positive streak of {{ habit.streak }} days
+                    {% elif habit.streak == -1 %}
+                    Negative streak of 1 day
+                    {% elif habit.streak < -1 %}
+                    Negative streak of {{ -habit.streak }} days
+                    {% else %}
+                    Check-in your first day to get going
+                    {% endif %}
+                </td>
                 <td>{{ habit.current_score }}</td>
             </tr>
             {% endfor %}
