@@ -41,6 +41,63 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+        /* Styles for the habit setup container */
+        .habit-setup-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the element */
+            font-size: 32px; /* Large font size for visibility */
+            background-color: #007bff; /* Bright blue for the button */
+            color: white;
+            cursor: pointer;
+            padding: 20px 40px; /* Larger padding for a bigger button */
+            border: none;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for depth */
+            z-index: 1000; /* High z-index to ensure visibility */
+            text-align: center; /* Center the text inside the button */
+}
+
+        /* Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 5% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%; /* Could be more or less, depending on screen size */
+            border-radius: 5px;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
         .check-in-btn {
             padding: 10px 20px;
             margin-top: 10px;
@@ -48,6 +105,9 @@
             background-color: #4169e1; /* Changed to blue */
             color: white;
             cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px; /* Optional: rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
         }
         .check-in-btn:disabled {
             background-color: #cccccc;
@@ -96,15 +156,37 @@
         .status-neutral {
             color: #555;
         }
-        /* Added styles for the set back button */
-        .set-back-btn {
+
+        /* Styles for the delete button container */
+        .delete-db-btn-container {
             padding: 10px 20px;
-            margin-top: 10px;
-            border: none;
-            background-color: #dc3545; /* Bootstrap's .btn-danger color */
+            font-size: 16px; /* Adjust font size as needed */
+            background-color: #dc3545; /* Red color for caution */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000; /* High z-index to ensure visibility */
             color: white;
+            margin-top: 10px;
             cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px; /* Optional: rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
         }
+
+        /* Style adjustments for the set back button */
+        .set-back-btn {
+            background-color: #dc3545; /* Red color for distinction */
+            color: white;
+            margin-top: 10px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px; /* Optional: rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
+        }
+
     </style>
 </head>
 <body>
@@ -112,6 +194,40 @@
         <h1>Habitat</h1>
         <div class="date">{{ today_date }}</div>
     </div>
+
+    <!-- Trigger/Open The Modal -->
+    {% if habits|length == 0 %}
+    <div id="habitSetupModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('habitSetupModal').style.display='none'">&times;</span>
+            <h2>Create Your Habit Plan</h2>
+            <form action="/add-initial-habits" method="post">
+                <div id="habitInputs">
+                    <input type="text" name="habit_names" placeholder="Enter a habit" required>
+                </div>
+                <button type="button" onclick="addHabitInput()">Add Another Habit</button>
+                <button type="submit">Start Tracking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript function to dynamically add new habit input fields
+        function addHabitInput() {
+            var container = document.getElementById("habitInputs");
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "habit_names";
+            input.placeholder = "Enter a habit";
+            input.required = true;
+            container.appendChild(input);
+        }
+        </script>
+
+    <!-- Button that opens the modal -->
+    <button class="habit-setup-container" onclick="document.getElementById('habitSetupModal').style.display='block'">Setup Habits</button>
+    {% else %}
 
     <!-- The Modal Button -->
     <button class="check-in-btn"
@@ -121,6 +237,10 @@
     <!-- Set Back Last Check-In Date Button -->
     <form method="POST" action="/set-back-last-checked-in">
         <button type="submit" class="set-back-btn">Set Back Last Checked-In</button>
+    </form>
+
+    <form method="POST" action="/delete-all">
+        <button type="submit" class="delete-db-btn-container">Delete all entries</button>
     </form>
 
     <!-- Display a message if already checked in for today -->
@@ -144,6 +264,8 @@
             </form>
         </div>
     </div>
+    
+    {% endif %}
 
     <!-- Habit List -->
     <table>
