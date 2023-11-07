@@ -15,10 +15,10 @@
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center;    
         }
         h1 {
-            color: #4169e1; /* Changed to blue */
+            color: #4169e1; /* Changed to blue */;
         }
         .date {
             color: #777;
@@ -41,6 +41,30 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+
+
+        /* Style for Add Habit button */
+        .add-habit-btn-container {
+            margin-top: 20px; /* Space between the table and the button */
+            text-align: left; /* Center the button container */
+        }
+
+        .add-habit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4169e1; /* Same blue as other buttons */
+            color: white;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s; /* Smooth background color transition */
+        }
+
+        .add-habit-btn:hover {
+            background-color: #365899; /* Darker blue on hover */
+        }
+
         /* Styles for the habit setup container */
         .habit-setup-container {
             position: fixed;
@@ -187,6 +211,40 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
         }
 
+
+        /* Style for Delete Habit button */
+        .delete-habit-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-top: 5px;
+            background-color: #dc3545; /* Bootstrap danger red */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-habit-btn:hover {
+            background-color: #bd2130; /* Darker shade of red for hover effect */
+        }
+
+        
+        /* Style for Rename Habit button */
+        .rename-habit-btn {
+            /* Style similarly to the delete button, but differentiate it, e.g., with a different color */
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #4169e1; /* A green color for go/save */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rename-habit-btn:hover {
+            background-color: #365899; /* A darker green for hover effect */
+        }
+
     </style>
 </head>
 <body>
@@ -239,8 +297,8 @@
         <button type="submit" class="set-back-btn">Set Back Last Checked-In</button>
     </form>
 
-    <form method="POST" action="/delete-all">
-        <button type="submit" class="delete-db-btn-container">Delete all entries</button>
+    <form action="{{ url_for('delete_all') }}" method="post" onsubmit="return confirm('Are you sure you want to delete all habits?');">
+        <button type="submit" class="delete-db-btn-container">Delete</button>
     </form>
 
     <!-- Display a message if already checked in for today -->
@@ -268,35 +326,87 @@
     {% endif %}
 
     <!-- Habit List -->
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Current Status</th>
-                <th>Current Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for habit in habits %}
-            <tr>
-                <td>{{ habit.name }}</td>
-                <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
-                    {% if habit.streak == 1 %}
-                    Positive streak of 1 day
-                    {% elif habit.streak > 1 %}
-                    Positive streak of {{ habit.streak }} days
-                    {% elif habit.streak == -1 %}
-                    Negative streak of 1 day
-                    {% elif habit.streak < -1 %}
-                    Negative streak of {{ -habit.streak }} days
-                    {% else %}
-                    Check-in your first day to get going
-                    {% endif %}
-                </td>
-                <td>{{ habit.current_score }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Current Status</th>
+            <th>Current Score</th>
+            <th>Actions</th> <!-- New column for actions -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for habit in habits %}
+        <tr>
+            <td>
+                <span id="habitNameText{{ habit.id }}">{{ habit.name }}</span>
+                <!-- Hidden form to rename habit -->
+                <form id="habitRenameForm{{ habit.id }}" action="{{ url_for('rename_habit', habit_id=habit.id) }}" method="post" style="display: none;">
+                    <input type="text" name="habit_name" value="{{ habit.name }}" required>
+                    <button type="submit" class="rename-habit-btn">Save</button>
+                </form>
+            </td>
+            <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
+                {% if habit.streak == 1 %}
+                Positive streak of 1 day
+                {% elif habit.streak > 1 %}
+                Positive streak of {{ habit.streak }} days
+                {% elif habit.streak == -1 %}
+                Negative streak of 1 day
+                {% elif habit.streak < -1 %}
+                Negative streak of {{ -habit.streak }} days
+                {% else %}
+                Check-in your first day to get going
+                {% endif %}
+            </td>
+            <td>{{ habit.current_score }}</td>
+            
+            <td>
+                <!-- Rename Button -->
+                <button onclick="toggleRenameView({{ habit.id }})" class="rename-habit-btn">Rename</button>
+                <!-- Delete Habit Button Form -->
+                <form action="{{ url_for('delete_habit', habit_id=habit.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this habit?');">
+                    <button type="submit" class="delete-habit-btn">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    // Function to toggle between view and edit mode for habit names
+    function toggleRenameView(habitId) {
+        var habitNameText = document.getElementById('habitNameText' + habitId);
+        var habitRenameForm = document.getElementById('habitRenameForm' + habitId);
+        if (habitRenameForm.style.display === 'none') {
+            // Show the rename form and hide the static text
+            habitNameText.style.display = 'none';
+            habitRenameForm.style.display = 'block';
+        } else {
+            // Hide the rename form and show the static text
+            habitRenameForm.style.display = 'none';
+            habitNameText.style.display = 'block';
+        }
+    }
+</script>
+
+<!-- Add Habit Button -->
+<div class="add-habit-btn-container">
+    <button class="add-habit-btn" onclick="document.getElementById('addHabitModal').style.display='block'">Add New Habit</button>
+</div>
+
+<!-- Add Habit Modal -->
+<div id="addHabitModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('addHabitModal').style.display='none'">&times;</span>
+        <h2>Add New Habit</h2>
+        <form action="{{ url_for('add_habit') }}" method="post">
+            <input type="text" name="new_habit_name" placeholder="Enter new habit name" required>
+            <button type="submit" class="btn">Add Habit</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

@@ -81,6 +81,35 @@ def delete_all():
     # Redirect back to the index page
     return redirect(url_for('index'))
 
+@app.route('/delete_habit/<int:habit_id>', methods=['POST'])
+def delete_habit(habit_id):
+    habit_to_delete = Habit.query.get_or_404(habit_id)
+    db.session.delete(habit_to_delete)
+    db.session.commit()
+    flash('Habit deleted successfully!', 'success')
+    return redirect(url_for('index'))
+
+
+@app.route('/rename_habit/<int:habit_id>', methods=['POST'])
+def rename_habit(habit_id):
+    habit_to_rename = Habit.query.get_or_404(habit_id)
+    habit_to_rename.name = request.form['habit_name']
+    db.session.commit()
+    flash('Habit renamed successfully!', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/add_habit', methods=['POST'])
+def add_habit():
+    new_habit_name = request.form['new_habit_name']
+    if new_habit_name:
+        new_habit = Habit(name=new_habit_name, current_status="Not started", current_score=0, streak=0)
+        db.session.add(new_habit)
+        db.session.commit()
+        flash('New habit added successfully!', 'success')
+    else:
+        flash('Habit name cannot be empty.', 'error')
+    return redirect(url_for('index'))
+
 
 @app.route('/check-in', methods=['POST'])
 def check_in():
