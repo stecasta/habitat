@@ -122,14 +122,49 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .check-in-btn {
+
+        /* Style for Edit Table button */
+        .edit-table-btn-container {
+            text-align: right; /* Align the button to the right */
+        }
+
+        .edit-table-btn {
             padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4169e1; /* Bootstrap primary blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             margin-top: 10px;
+            margin-bottom: 10px; /* Spacing before the table */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
+        }
+
+        .edit-table-btn:hover {
+            background-color: #365899; /* A darker blue for hover effect */
+        }
+
+        .buttons-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        }
+
+        /* Spacer Styles */
+        .spacer {
+            flex-grow: 1;
+        }
+
+        .check-in-btn {
+            margin-top: 10px;
+            font-size: 16px;
             border: none;
             background-color: #4169e1; /* Changed to blue */
             color: white;
             cursor: pointer;
             padding: 10px 20px;
+            margin-bottom: 10px; /* Spacing before the table */
             border-radius: 5px; /* Optional: rounded corners */
             box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
         }
@@ -137,6 +172,7 @@
             background-color: #cccccc;
             cursor: default;
         }
+        
         .modal {
             display: none;
             position: fixed;
@@ -179,24 +215,6 @@
         }
         .status-neutral {
             color: #555;
-        }
-
-        /* Styles for the delete button container */
-        .delete-db-btn-container {
-            padding: 10px 20px;
-            font-size: 16px; /* Adjust font size as needed */
-            background-color: #dc3545; /* Red color for caution */
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000; /* High z-index to ensure visibility */
-            color: white;
-            margin-top: 10px;
-            cursor: pointer;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px; /* Optional: rounded corners */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
         }
 
         /* Style adjustments for the set back button */
@@ -245,6 +263,59 @@
             background-color: #365899; /* A darker green for hover effect */
         }
 
+        /* Style for Admin Mode button */
+        .admin-mode-btn-container {
+            text-align: right; /* Align the button to the right */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .admin-mode-btn {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #6c757d; /* Bootstrap success green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px; /* Spacing before the table */
+        }
+
+        .admin-mode-btn:hover {
+            background-color: #5a6268; /* A darker green for hover effect */
+        }
+
+        /* Delete All Habits Button Container Styles */
+        .delete-table-btn-container {
+            position: absolute;
+            right: 0;
+            bottom: -100px; /* Adjust as needed to position correctly below the table */
+            width: 100%; /* Ensure the container spans the full width of its parent */
+            text-align: right; /* Align the button to the right */
+        }
+
+        /* Delete All Habits Button Styles */
+        .delete-table-btn {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #dc3545; /* Red for delete */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; /* Spacing from the bottom of the table */
+        }
+
+        .delete-table-btn:hover {
+            background-color: #c82333; /* A darker red for hover effect */
+        }
+
+        .table-container {
+        position: relative; /* This allows absolute positioning of children like .delete-table-btn-container */
+        margin-bottom: 50px; /* Extra space for the button below the table */
+    }
+
     </style>
 </head>
 <body>
@@ -287,18 +358,23 @@
     <button class="habit-setup-container" onclick="document.getElementById('habitSetupModal').style.display='block'">Setup Habits</button>
     {% else %}
 
-    <!-- The Modal Button -->
-    <button class="check-in-btn"
-        onclick="document.getElementById('checkInModal').style.display='block'"
-        {{ 'disabled' if already_checked_in }}>Daily Check-In</button>
+    <div class="buttons-container">
+        <!-- The Modal Button -->
+        <button class="check-in-btn"
+            onclick="document.getElementById('checkInModal').style.display='block'"
+            {{ 'disabled' if already_checked_in }}>Daily Check-In</button>
+
+        <!-- Spacer to push the Edit button to the right -->
+        <div class="spacer"></div>
+
+        <!-- Edit Table Button -->
+        <button onclick="toggleEditButtons()" class="edit-table-btn">Edit Table</button>
+        </div>
+    </div>
 
     <!-- Set Back Last Check-In Date Button -->
-    <form method="POST" action="/set-back-last-checked-in">
+    <form method="POST" action="/set-back-last-checked-in" class="admin-action" style="display: none;">
         <button type="submit" class="set-back-btn">Set Back Last Checked-In</button>
-    </form>
-
-    <form action="{{ url_for('delete_all') }}" method="post" onsubmit="return confirm('Are you sure you want to delete all habits?');">
-        <button type="submit" class="delete-db-btn-container">Delete</button>
     </form>
 
     <!-- Display a message if already checked in for today -->
@@ -322,57 +398,99 @@
             </form>
         </div>
     </div>
+
+    <div class="admin-mode-btn-container">
+        <button onclick="toggleAdminButtons()" class="admin-mode-btn">Admin Mode</button>
+    </div>
     
     {% endif %}
 
-    <!-- Habit List -->
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Current Status</th>
-            <th>Current Score</th>
-            <th>Actions</th> <!-- New column for actions -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for habit in habits %}
-        <tr>
-            <td>
-                <span id="habitNameText{{ habit.id }}">{{ habit.name }}</span>
-                <!-- Hidden form to rename habit -->
-                <form id="habitRenameForm{{ habit.id }}" action="{{ url_for('rename_habit', habit_id=habit.id) }}" method="post" style="display: none;">
-                    <input type="text" name="habit_name" value="{{ habit.name }}" required>
-                    <button type="submit" class="rename-habit-btn">Save</button>
-                </form>
-            </td>
-            <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
-                {% if habit.streak == 1 %}
-                Positive streak of 1 day
-                {% elif habit.streak > 1 %}
-                Positive streak of {{ habit.streak }} days
-                {% elif habit.streak == -1 %}
-                Negative streak of 1 day
-                {% elif habit.streak < -1 %}
-                Negative streak of {{ -habit.streak }} days
-                {% else %}
-                Check-in your first day to get going
-                {% endif %}
-            </td>
-            <td>{{ habit.current_score }}</td>
-            
-            <td>
-                <!-- Rename Button -->
-                <button onclick="toggleRenameView({{ habit.id }})" class="rename-habit-btn">Rename</button>
-                <!-- Delete Habit Button Form -->
-                <form action="{{ url_for('delete_habit', habit_id=habit.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this habit?');">
-                    <button type="submit" class="delete-habit-btn">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<!-- Habit List -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Current Status</th>
+                <th>Current Score</th>
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for habit in habits %}
+            <tr>
+                <td>
+                    <span id="habitNameText{{ habit.id }}">{{ habit.name }}</span>
+                    <!-- Hidden form to rename habit -->
+                    <form id="habitRenameForm{{ habit.id }}" action="{{ url_for('rename_habit', habit_id=habit.id) }}" method="post" style="display: none;">
+                        <input type="text" name="habit_name" value="{{ habit.name }}" required>
+                        <button type="submit" class="rename-habit-btn">Save</button>
+                    </form>
+                </td>
+                <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
+                    {% if habit.streak == 1 %}
+                    Positive streak of 1 day
+                    {% elif habit.streak > 1 %}
+                    Positive streak of {{ habit.streak }} days
+                    {% elif habit.streak == -1 %}
+                    Negative streak of 1 day
+                    {% elif habit.streak < -1 %}
+                    Negative streak of {{ -habit.streak }} days
+                    {% else %}
+                    Check-in your first day to get going
+                    {% endif %}
+                </td>
+                <td>{{ habit.current_score }}</td>
+                
+                <td class="habit-actions" style="display: none;"> <!-- Initially hidden -->
+                        <!-- Rename Button -->
+                    <button onclick="toggleRenameView({{ habit.id }})" class="rename-habit-btn">Rename</button>
+                    <!-- Delete Habit Button Form -->
+                    <form action="{{ url_for('delete_habit', habit_id=habit.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this habit?');">
+                        <button type="submit" class="delete-habit-btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="{{ url_for('delete_all') }}" method="post" onsubmit="return confirm('Are you sure you want to delete all habits?');" class="delete-table-btn-container admin-action" style="display: none;">
+        <button type="submit" class="delete-table-btn">Delete all habits</button>
+    </form>
+</div>
+
+<script>
+    
+    // Function to toggle the visibility of the admin buttons
+    function toggleAdminButtons() {
+        // Get all the admin action buttons
+        var adminButtons = document.querySelectorAll('.admin-action');
+        adminButtons.forEach(function(button) {
+            if (button.style.display === 'none') {
+                button.style.display = 'block'; // Show the buttons
+            } else {
+                button.style.display = 'none'; // Hide the buttons
+            }
+        });
+    }
+
+    // Function to toggle the visibility of the edit buttons
+    function toggleEditButtons() {
+        // Get all the action buttons
+        var actionButtons = document.querySelectorAll('.habit-actions');
+        actionButtons.forEach(function(button) {
+            if (button.style.display === 'none') {
+                button.style.display = 'table-cell'; // Show the buttons
+            } else {
+                button.style.display = 'none'; // Hide the buttons
+            }
+        });
+        // Toggle the Add New Habit button
+        var addHabitBtn = document.getElementById('addHabitBtn');
+        addHabitBtn.style.display = addHabitBtn.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
 
 <script>
     // Function to toggle between view and edit mode for habit names
@@ -391,22 +509,24 @@
     }
 </script>
 
-<!-- Add Habit Button -->
-<div class="add-habit-btn-container">
-    <button class="add-habit-btn" onclick="document.getElementById('addHabitModal').style.display='block'">Add New Habit</button>
-</div>
-
-<!-- Add Habit Modal -->
-<div id="addHabitModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="document.getElementById('addHabitModal').style.display='none'">&times;</span>
-        <h2>Add New Habit</h2>
-        <form action="{{ url_for('add_habit') }}" method="post">
-            <input type="text" name="new_habit_name" placeholder="Enter new habit name" required>
-            <button type="submit" class="btn">Add Habit</button>
-        </form>
+{% if habits|length != 0 %}
+    <!-- Add Habit Button -->
+    <div class="add-habit-btn-container habit-actions" style="display: none;">
+        <button class="add-habit-btn" onclick="document.getElementById('addHabitModal').style.display='block'">Add New Habit</button>
     </div>
-</div>
+
+    <!-- Add Habit Modal -->
+    <div id="addHabitModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('addHabitModal').style.display='none'">&times;</span>
+            <h2>Add New Habit</h2>
+            <form action="{{ url_for('add_habit') }}" method="post">
+                <input type="text" name="new_habit_name" placeholder="Enter new habit name" required>
+                <button type="submit" class="btn">Add Habit</button>
+            </form>
+        </div>
+    </div>
+{%endif%}
 
 </body>
 </html>
