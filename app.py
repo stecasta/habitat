@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
-from flask import flash, get_flashed_messages, jsonify
+from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import os
@@ -26,7 +26,7 @@ def index():
     today_date = datetime.now().strftime("%Y-%m-%d")
     habits = Habit.query.all()
     print("Habits:", habits)  # This will print to your console where you run the Flask app
-    already_checked_in = any(habit.last_checked_in and habit.last_checked_in.strftime("%Y-%m-%d") == today_date for habit in habits)
+    already_checked_in = all(habit.last_checked_in and habit.last_checked_in.strftime("%Y-%m-%d") == today_date for habit in habits)
     return render_template('index.html', habits=habits, today_date=today_date, already_checked_in=already_checked_in)
 
 @app.route('/add-initial-habits', methods=['POST'])
@@ -110,66 +110,51 @@ def add_habit():
         flash('Habit name cannot be empty.', 'error')
     return redirect(url_for('index'))
 
-
-@app.route('/check-in', methods=['POST'])
-def check_in():
+def update_habit_status(habit, completed):
     today = datetime.utcnow().date()
-    if request.method == 'POST':
-        checked_habits = request.form.getlist('habit_check')
-        all_habits = Habit.query.all()
+    habit.last_checked_in = today
 
-        for habit in all_habits:
-            # Update last_checked_in date for each habit
-            habit.last_checked_in = today
+    if completed:
+        if habit.streak >= 0:
+            habit.streak += 1
+        else:
+            habit.streak = 1
+        habit.current_score += 1
+    else:
+        if habit.streak > 0:
+            habit.streak = -1
+        else:
+            habit.streak -= 1
+        decrease_amount = 2 ** abs(habit.streak + 1)
+        habit.current_score = max(0, habit.current_score - decrease_amount)
 
-            # If the habit was checked today
-            if str(habit.id) in checked_habits:
-                if habit.streak >= 0:
-                    habit.streak += 1
-                else:
-                    habit.streak = 1  # Reset streak to 1 if it was negative
-                habit.current_score += 1  # Increase score
-            else:
-                if habit.streak > 0:
-                    habit.streak = -1  # If streak was positive, set to -1
-                else:
-                    habit.streak -= 1  # Decrease negative streak
-                
-                # Score decrease logic based on the negative streak
-                # Since we know the user checks in every day, the streak will always be the number of consecutive missed days
-                if habit.streak < 0:
-                    decrease_amount = 2 ** abs(habit.streak + 1)  # 2 to the power of the number of days missed
-                else:
-                    decrease_amount = 1  # If it's the first miss, decrease by 1
-                
-                habit.current_score = max(0, habit.current_score - decrease_amount)  # Ensure score doesn't go below 0
+    db.session.commit()
 
-        db.session.commit()
-
+@app.route('/mark_habit/<int:habit_id>/<status>', methods=['POST'])
+def mark_habit(habit_id, status):
+    habit = Habit.query.get_or_404(habit_id)
+    completed = status == 'done'
+    update_habit_status(habit, completed)
     return redirect(url_for('index'))
 
 
+@app.route('/check-in', methods=['POST'])
+def check_in():
+    checked_habits = request.form.getlist('habit_check')
+    all_habits = Habit.query.all()
+
+    for habit in all_habits:
+        if str(habit.id) in checked_habits:
+            update_habit_status(habit, True)
+        else:
+            update_habit_status(habit, False)
+
+    return redirect(url_for('index'))
 
 
 def initialize_database():
     with app.app_context():
         db.create_all()
-        # # Data to initialize database with
-        # initial_habits = [
-        #     {'name': 'Drink Water', 'current_status': 'Check-in your first day to get going', 'current_score': 0, 'streak': 0},
-        #     {'name': 'Exercise', 'current_status': 'Check-in your first day to get going', 'current_score': 0, 'streak': 0},
-        #     {'name': 'Read Book', 'current_status': 'Check-in your first day to get going', 'current_score': 0, 'streak': 0}
-        # ]
-
-        # for init_habit in initial_habits:
-        #     habit = Habit(
-        #         name=init_habit['name'],
-        #         current_status=init_habit['current_status'],
-        #         current_score=init_habit['current_score'],
-        #         streak=init_habit['streak']
-        #     )
-        #     db.session.add(habit)
-
         db.session.commit()
 
 
