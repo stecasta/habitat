@@ -418,7 +418,11 @@
                 {% for habit in habits %}
                 <div>
                     <label>
+                        {% if habit.last_checked_in == today_date %}
+                        <input type="checkbox" name="habit_check" value="{{ habit.id }}" disabled> {{ habit.name }}
+                        {% else %}
                         <input type="checkbox" name="habit_check" value="{{ habit.id }}"> {{ habit.name }}
+                        {% endif %}
                     </label>
                 </div>
                 {% endfor %}

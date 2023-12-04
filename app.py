@@ -112,23 +112,25 @@ def add_habit():
 
 def update_habit_status(habit, completed):
     today = datetime.utcnow().date()
-    habit.last_checked_in = today
+    # Only update if the habit wasn't already checked in today
+    if habit.last_checked_in != today:
+        habit.last_checked_in = today
 
-    if completed:
-        if habit.streak >= 0:
-            habit.streak += 1
+        if completed:
+            if habit.streak >= 0:
+                habit.streak += 1
+            else:
+                habit.streak = 1
+            habit.current_score += 1
         else:
-            habit.streak = 1
-        habit.current_score += 1
-    else:
-        if habit.streak > 0:
-            habit.streak = -1
-        else:
-            habit.streak -= 1
-        decrease_amount = 2 ** abs(habit.streak + 1)
-        habit.current_score = max(0, habit.current_score - decrease_amount)
+            if habit.streak > 0:
+                habit.streak = -1
+            else:
+                habit.streak -= 1
+            decrease_amount = 2 ** abs(habit.streak + 1)
+            habit.current_score = max(0, habit.current_score - decrease_amount)
 
-    db.session.commit()
+        db.session.commit()
 
 @app.route('/mark_habit/<int:habit_id>/<status>', methods=['POST'])
 def mark_habit(habit_id, status):
