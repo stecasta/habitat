@@ -485,17 +485,22 @@
                     </form>
                 </td>
 
-                {% if habit.last_checked_in != today_date %}
-
                 <td class="check-in-actions">
-                    <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='done') }}" method="post">
-                        <button class="check-in-action-btn done-btn" onclick="markHabit({{ habit.id }}, 'done')">&#10003;</button>
-                    </form>
-                    <form style="display: inline-block;"action="{{ url_for('mark_habit', habit_id=habit.id, status='failed') }}" method="post">
-                        <button class="check-in-action-btn failed-btn" onclick="markHabit({{ habit.id }}, 'failed')">&#10007;</button>
-                    </form>
+                    <div id="checkInBtnContainer{{ habit.id }}">
+                        <!-- Done Button -->
+                        <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='done') }}"
+                            method="post">
+                            <button class="check-in-action-btn done-btn"
+                                style="{{ 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak < 0 else 'opacity: 1;' }}">&#10003;</button>
+                        </form>
+                        <!-- Failed Button -->
+                        <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='failed') }}"
+                            method="post">
+                            <button class="check-in-action-btn failed-btn"
+                                style="{{ 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak > 0 else 'opacity: 1;' }}">&#10007;</button>
+                        </form>
+                    </div>
                 </td>
-                {% endif %}
                 
             </tr>
             {% endfor %}
@@ -548,9 +553,6 @@
             addHabitBtn.style.display = isEditMode ? 'block' : 'none';
         }
     }
-
-    // Call toggleEditButtons() on page load to set the initial state
-    // document.addEventListener('DOMContentLoaded', toggleEditButtons);
 
 
 </script>
