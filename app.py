@@ -23,10 +23,10 @@ class Habit(db.Model):
 
 @app.route('/')
 def index():
-    today_date = datetime.now().strftime("%Y-%m-%d")
+    today_date = datetime.utcnow().date()
     habits = Habit.query.all()
     print("Habits:", habits)  # This will print to your console where you run the Flask app
-    already_checked_in = all(habit.last_checked_in and habit.last_checked_in.strftime("%Y-%m-%d") == today_date for habit in habits)
+    already_checked_in = all(habit.last_checked_in and habit.last_checked_in == today_date for habit in habits)
     return render_template('index.html', habits=habits, today_date=today_date, already_checked_in=already_checked_in)
 
 @app.route('/add-initial-habits', methods=['POST'])
