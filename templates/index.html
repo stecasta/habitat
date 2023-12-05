@@ -407,7 +407,7 @@
 
     <!-- Display a message if already checked in for today -->
     {% if already_checked_in %}
-    <p class="check-in-message status-neutral">Already checked in for today.</p>
+    <p class="check-in-message status-neutral">Already checked in for yesterday.</p>
     {% endif %}
 
     <!-- The Modal -->
@@ -491,14 +491,14 @@
                         <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='done') }}"
                             method="post">
                             <button class="check-in-action-btn done-btn"
-                                style="{{ 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak < 0 else 'opacity: 1;' }}">&#10003;</button>
-                        </form>
+                                style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak < 0 else 'opacity: 1;' }}">&#10003;</button>
                         <!-- Failed Button -->
                         <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='failed') }}"
                             method="post">
                             <button class="check-in-action-btn failed-btn"
-                                style="{{ 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak > 0 else 'opacity: 1;' }}">&#10007;</button>
+                                style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak > 0 else 'opacity: 1;' }}">&#10007;</button>
                         </form>
+                        
                     </div>
                 </td>
                 

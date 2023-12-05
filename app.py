@@ -22,12 +22,17 @@ class Habit(db.Model):
         return f"<Habit {self.name}>"
 
 @app.route('/')
-def index():
+def index(): 
     today_date = datetime.utcnow().date()
+    yesterday_date = today_date - timedelta(days=1)  # Define yesterday date
     habits = Habit.query.all()
-    print("Habits:", habits)  # This will print to your console where you run the Flask app
-    already_checked_in = all(habit.last_checked_in and habit.last_checked_in == today_date for habit in habits)
-    return render_template('index.html', habits=habits, today_date=today_date, already_checked_in=already_checked_in)
+
+    # Add check for None type first in case of empty table
+    if any(habit.last_checked_in == None for habit in habits) == None:
+        already_checked_in = False
+    else:
+        already_checked_in = all(habit.last_checked_in and habit.last_checked_in >= yesterday_date for habit in habits)
+    return render_template('index.html', habits=habits, today_date=today_date, yesterday_date=yesterday_date, already_checked_in=already_checked_in)
 
 @app.route('/add-initial-habits', methods=['POST'])
 def add_initial_habits():
@@ -53,11 +58,9 @@ def set_back_last_checked_in():
 def set_back_date():
     # Get all habits from the database
     habits = Habit.query.all()
-    # Set back the last_checked_in date to yesterday for all habits
-    yesterday = datetime.utcnow().date() - timedelta(days=1)
     for habit in habits:
-        habit.last_checked_in = yesterday
-        print(f'Updating habit {habit.id} last checked-in date to {yesterday}')  # Print each update for debugging
+        habit.last_checked_in -= timedelta(days=1)
+        print(f'Updating habit {habit.id} last checked-in date to {habit.last_checked_in}')  # Print each update for debugging
 
     # Commit the changes to the database
     db.session.commit()
@@ -110,11 +113,10 @@ def add_habit():
         flash('Habit name cannot be empty.', 'error')
     return redirect(url_for('index'))
 
-def update_habit_status(habit, completed):
-    today = datetime.utcnow().date()
+def update_habit_status(habit, completed, date):
     # Only update if the habit wasn't already checked in today
-    if habit.last_checked_in != today:
-        habit.last_checked_in = today
+    if habit.last_checked_in != date:
+        habit.last_checked_in = date
 
         if completed:
             if habit.streak >= 0:
@@ -134,22 +136,24 @@ def update_habit_status(habit, completed):
 
 @app.route('/mark_habit/<int:habit_id>/<status>', methods=['POST'])
 def mark_habit(habit_id, status):
+    today = datetime.utcnow().date()
     habit = Habit.query.get_or_404(habit_id)
     completed = status == 'done'
-    update_habit_status(habit, completed)
+    update_habit_status(habit, completed, today)
     return redirect(url_for('index'))
 
 
 @app.route('/check-in', methods=['POST'])
 def check_in():
+    yesterday = datetime.utcnow().date() - timedelta(days=1)
     checked_habits = request.form.getlist('habit_check')
     all_habits = Habit.query.all()
 
     for habit in all_habits:
         if str(habit.id) in checked_habits:
-            update_habit_status(habit, True)
+            update_habit_status(habit, True, yesterday)
         else:
-            update_habit_status(habit, False)
+            update_habit_status(habit, False, yesterday)
 
     return redirect(url_for('index'))
 
