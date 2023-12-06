@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,32 +13,43 @@
             margin: 0;
             padding: 20px;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;    
+            align-items: center;
         }
+
         h1 {
-            color: #4169e1; /* Changed to blue */;
+            color: #4169e1;
+            /* Changed to blue */
+            ;
         }
+
         .date {
             color: #777;
             font-size: 1rem;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             text-align: left;
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
+
         th {
-            background-color: #4169e1; /* Changed to blue */
+            background-color: #4169e1;
+            /* Changed to blue */
             color: white;
         }
+
         tr:hover {
             background-color: #f5f5f5;
         }
@@ -45,24 +57,29 @@
 
         /* Style for Add Habit button */
         .add-habit-btn-container {
-            margin-top: 20px; /* Space between the table and the button */
-            text-align: left; /* Center the button container */
+            margin-top: 20px;
+            /* Space between the table and the button */
+            text-align: left;
+            /* Center the button container */
         }
 
         .add-habit-btn {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4169e1; /* Same blue as other buttons */
+            background-color: #4169e1;
+            /* Same blue as other buttons */
             color: white;
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.3s; /* Smooth background color transition */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            /* Smooth background color transition */
         }
 
         .add-habit-btn:hover {
-            background-color: #365899; /* Darker blue on hover */
+            background-color: #365899;
+            /* Darker blue on hover */
         }
 
         /* Styles for the habit setup container */
@@ -70,41 +87,59 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Center the element */
-            font-size: 32px; /* Large font size for visibility */
-            background-color: #007bff; /* Bright blue for the button */
+            transform: translate(-50%, -50%);
+            /* Center the element */
+            font-size: 32px;
+            /* Large font size for visibility */
+            background-color: #007bff;
+            /* Bright blue for the button */
             color: white;
             cursor: pointer;
-            padding: 20px 40px; /* Larger padding for a bigger button */
+            padding: 20px 40px;
+            /* Larger padding for a bigger button */
             border: none;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for depth */
-            z-index: 1000; /* High z-index to ensure visibility */
-            text-align: center; /* Center the text inside the button */
-}
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Shadow for depth */
+            z-index: 1000;
+            /* High z-index to ensure visibility */
+            text-align: center;
+            /* Center the text inside the button */
+        }
 
         /* Modal (background) */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
             padding-top: 60px;
         }
 
         /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; /* 5% from the top and centered */
+            margin: 5% auto;
+            /* 5% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
-            width: 30%; /* Could be more or less, depending on screen size */
+            width: 30%;
+            /* Could be more or less, depending on screen size */
             border-radius: 5px;
         }
 
@@ -125,30 +160,35 @@
 
         /* Style for Edit Table button */
         .edit-table-btn-container {
-            text-align: right; /* Align the button to the right */
+            text-align: right;
+            /* Align the button to the right */
         }
 
         .edit-table-btn {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4169e1; /* Bootstrap primary blue */
+            background-color: #4169e1;
+            /* Bootstrap primary blue */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
-            margin-bottom: 10px; /* Spacing before the table */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
+            margin-bottom: 10px;
+            /* Spacing before the table */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Optional: some shadow for better visibility */
         }
 
         .edit-table-btn:hover {
-            background-color: #365899; /* A darker blue for hover effect */
+            background-color: #365899;
+            /* A darker blue for hover effect */
         }
 
         .buttons-container {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
         }
 
         /* Spacer Styles */
@@ -160,19 +200,24 @@
             margin-top: 10px;
             font-size: 16px;
             border: none;
-            background-color: #4169e1; /* Changed to blue */
+            background-color: #4169e1;
+            /* Changed to blue */
             color: white;
             cursor: pointer;
             padding: 10px 20px;
-            margin-bottom: 10px; /* Spacing before the table */
-            border-radius: 5px; /* Optional: rounded corners */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
+            margin-bottom: 10px;
+            /* Spacing before the table */
+            border-radius: 5px;
+            /* Optional: rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Optional: some shadow for better visibility */
         }
+
         .check-in-btn:disabled {
             background-color: #cccccc;
             cursor: default;
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -182,10 +227,11 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
             padding-top: 60px;
         }
+
         .modal-content {
             background-color: #fefefe;
             margin: auto;
@@ -193,6 +239,7 @@
             border: 1px solid #888;
             width: 80%;
         }
+
         .close {
             color: #aaa;
             float: right;
@@ -200,33 +247,40 @@
             font-weight: bold;
             cursor: pointer;
         }
+
         .check-in-message {
             font-weight: bold;
             padding: 10px;
             margin-top: 10px;
             text-align: center;
         }
+
         /* Added status colors */
         .status-positive {
             color: green;
         }
+
         .status-negative {
             color: red;
         }
+
         .status-neutral {
             color: #555;
         }
 
         /* Style adjustments for the set back button */
         .set-back-btn {
-            background-color: #dc3545; /* Red color for distinction */
+            background-color: #dc3545;
+            /* Red color for distinction */
             color: white;
             margin-top: 10px;
             cursor: pointer;
             padding: 10px 20px;
             border: none;
-            border-radius: 5px; /* Optional: rounded corners */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: some shadow for better visibility */
+            border-radius: 5px;
+            /* Optional: rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Optional: some shadow for better visibility */
         }
 
 
@@ -235,7 +289,8 @@
             padding: 5px 10px;
             font-size: 14px;
             margin-top: 5px;
-            background-color: #dc3545; /* Bootstrap danger red */
+            background-color: #dc3545;
+            /* Bootstrap danger red */
             color: white;
             border: none;
             border-radius: 5px;
@@ -243,16 +298,18 @@
         }
 
         .delete-habit-btn:hover {
-            background-color: #bd2130; /* Darker shade of red for hover effect */
+            background-color: #bd2130;
+            /* Darker shade of red for hover effect */
         }
 
-        
+
         /* Style for Rename Habit button */
         .rename-habit-btn {
             /* Style similarly to the delete button, but differentiate it, e.g., with a different color */
             padding: 5px 10px;
             font-size: 14px;
-            background-color: #4169e1; /* A green color for go/save */
+            background-color: #4169e1;
+            /* A green color for go/save */
             color: white;
             border: none;
             border-radius: 5px;
@@ -260,12 +317,14 @@
         }
 
         .rename-habit-btn:hover {
-            background-color: #365899; /* A darker green for hover effect */
+            background-color: #365899;
+            /* A darker green for hover effect */
         }
 
         /* Style for Admin Mode button */
         .admin-mode-btn-container {
-            text-align: right; /* Align the button to the right */
+            text-align: right;
+            /* Align the button to the right */
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -274,41 +333,50 @@
         .admin-mode-btn {
             padding: 5px 10px;
             font-size: 16px;
-            background-color: #6c757d; /* Bootstrap success green */
+            background-color: #6c757d;
+            /* Bootstrap success green */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 10px; /* Spacing before the table */
+            margin-bottom: 10px;
+            /* Spacing before the table */
         }
 
         .admin-mode-btn:hover {
-            background-color: #5a6268; /* A darker green for hover effect */
+            background-color: #5a6268;
+            /* A darker green for hover effect */
         }
 
         /* Delete All Habits Button Container Styles */
         .delete-table-btn-container {
             position: absolute;
             right: 0;
-            bottom: -100px; /* Adjust as needed to position correctly below the table */
-            width: 100%; /* Ensure the container spans the full width of its parent */
-            text-align: right; /* Align the button to the right */
+            bottom: -100px;
+            /* Adjust as needed to position correctly below the table */
+            width: 100%;
+            /* Ensure the container spans the full width of its parent */
+            text-align: right;
+            /* Align the button to the right */
         }
 
         /* Delete All Habits Button Styles */
         .delete-table-btn {
             padding: 5px 10px;
             font-size: 16px;
-            background-color: #dc3545; /* Red for delete */
+            background-color: #dc3545;
+            /* Red for delete */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px; /* Spacing from the bottom of the table */
+            margin-top: 10px;
+            /* Spacing from the bottom of the table */
         }
 
         .delete-table-btn:hover {
-            background-color: #c82333; /* A darker red for hover effect */
+            background-color: #c82333;
+            /* A darker red for hover effect */
         }
 
         /* Style for Done and Failed buttons */
@@ -324,28 +392,34 @@
         }
 
         .done-btn {
-            background-color: #28a745; /* Green for done */
+            background-color: #28a745;
+            /* Green for done */
         }
 
         .done-btn:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
+            /* Darker green on hover */
         }
 
         .failed-btn {
-            background-color: #dc3545; /* Red for failed */
+            background-color: #dc3545;
+            /* Red for failed */
         }
 
         .failed-btn:hover {
-            background-color: #c82333; /* Darker red on hover */
+            background-color: #c82333;
+            /* Darker red on hover */
         }
 
         .table-container {
-        position: relative; /* This allows absolute positioning of children like .delete-table-btn-container */
-        margin-bottom: 50px; /* Extra space for the button below the table */
-    }
-
+            position: relative;
+            /* This allows absolute positioning of children like .delete-table-btn-container */
+            margin-bottom: 50px;
+            /* Extra space for the button below the table */
+        }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>Habitat</h1>
@@ -380,16 +454,16 @@
             input.required = true;
             container.appendChild(input);
         }
-        </script>
+    </script>
 
     <!-- Button that opens the modal -->
-    <button class="habit-setup-container" onclick="document.getElementById('habitSetupModal').style.display='block'">Setup Habits</button>
+    <button class="habit-setup-container"
+        onclick="document.getElementById('habitSetupModal').style.display='block'">Setup Habits</button>
     {% else %}
 
     <div class="buttons-container">
         <!-- The Modal Button -->
-        <button class="check-in-btn"
-            onclick="document.getElementById('checkInModal').style.display='block'"
+        <button class="check-in-btn" onclick="document.getElementById('checkInModal').style.display='block'"
             {{ 'disabled' if already_checked_in }}>Daily Check-In</button>
 
         <!-- Spacer to push the Edit button to the right -->
@@ -397,7 +471,7 @@
 
         <!-- Edit Table Button -->
         <button onclick="toggleEditButtons()" class="edit-table-btn">Edit Table</button>
-        </div>
+    </div>
     </div>
 
     <!-- Set Back Last Check-In Date Button -->
@@ -434,150 +508,155 @@
     <div class="admin-mode-btn-container">
         <button onclick="toggleAdminButtons()" class="admin-mode-btn">Admin Mode</button>
     </div>
-    
+
     {% endif %}
 
-<!-- Habit List -->
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Current Status</th>
-                <th>Current Score</th>
-                <th>Actions</th> <!-- New column for actions -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for habit in habits %}
-            <tr>
-                <td>
-                    <span id="habitNameText{{ habit.id }}">{{ habit.name }}</span>
-                    <!-- Hidden form to rename habit -->
-                    <form id="habitRenameForm{{ habit.id }}" action="{{ url_for('rename_habit', habit_id=habit.id) }}" method="post" style="display: none;">
-                        <input type="text" name="habit_name" value="{{ habit.name }}" required>
-                        <button type="submit" class="rename-habit-btn">Save</button>
-                    </form>
-                </td>
-                <td class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
-                    {% if habit.streak == 1 %}
-                    Positive streak of 1 day
-                    {% elif habit.streak > 1 %}
-                    Positive streak of {{ habit.streak }} days
-                    {% elif habit.streak == -1 %}
-                    Negative streak of 1 day
-                    {% elif habit.streak < -1 %}
-                    Negative streak of {{ -habit.streak }} days
-                    {% else %}
-                    Check-in your first day to get going
-                    {% endif %}
-                </td>
-                <td>{{ habit.current_score }}</td>
-                    
-                <td class="habit-actions" style="display: none;"> <!-- Initially hidden -->
-                    <!-- Rename Button -->
-                    <button style="display: inline-block;" onclick="toggleRenameView({{ habit.id }})"
-                        class="rename-habit-btn">Rename</button>
-                    <!-- Delete Habit Button Form -->
-                    <form style="display: inline-block;" action="{{ url_for('delete_habit', habit_id=habit.id) }}" method="post"
-                        onsubmit="return confirm('Are you sure you want to delete this habit?');">
-                        <button type="submit" class="delete-habit-btn">Delete</button>
-                    </form>
-                </td>
-
-                <td class="check-in-actions">
-                    <div id="checkInBtnContainer{{ habit.id }}">
-                        <!-- Done Button -->
-                        <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='done') }}"
-                            method="post">
-                            <button class="check-in-action-btn done-btn"
-                                style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak < 0 else 'opacity: 1;' }}">&#10003;</button>
-                        <!-- Failed Button -->
-                        <form style="display: inline-block;" action="{{ url_for('mark_habit', habit_id=habit.id, status='failed') }}"
-                            method="post">
-                            <button class="check-in-action-btn failed-btn"
-                                style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak > 0 else 'opacity: 1;' }}">&#10007;</button>
+    <!-- Habit List -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Current Status</th>
+                    <th>Current Score</th>
+                    <th>Actions</th> <!-- New column for actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for habit in habits %}
+                <tr>
+                    <td>
+                        <span id="habitNameText{{ habit.id }}">{{ habit.name }}</span>
+                        <!-- Hidden form to rename habit -->
+                        <form id="habitRenameForm{{ habit.id }}"
+                            action="{{ url_for('rename_habit', habit_id=habit.id) }}" method="post"
+                            style="display: none;">
+                            <input type="text" name="habit_name" value="{{ habit.name }}" required>
+                            <button type="submit" class="rename-habit-btn">Save</button>
                         </form>
-                        
-                    </div>
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </td>
+                    <td
+                        class="{{ 'status-positive' if habit.streak > 0 else 'status-negative' if habit.streak < 0 else 'status-neutral' }}">
+                        {% if habit.streak == 1 %}
+                        Positive streak of 1 day
+                        {% elif habit.streak > 1 %}
+                        Positive streak of {{ habit.streak }} days
+                        {% elif habit.streak == -1 %}
+                        Negative streak of 1 day
+                        {% elif habit.streak < -1 %} Negative streak of {{ -habit.streak }} days {% else %} Check-in
+                            your first day to get going {% endif %} </td>
+                    <td>{{ habit.current_score }}</td>
 
-    <form action="{{ url_for('delete_all') }}" method="post" onsubmit="return confirm('Are you sure you want to delete all habits?');" class="delete-table-btn-container admin-action" style="display: none;">
-        <button type="submit" class="delete-table-btn">Delete all habits</button>
-    </form>
-</div>
+                    <td class="habit-actions" style="display: none;"> <!-- Initially hidden -->
+                        <!-- Rename Button -->
+                        <button style="display: inline-block;" onclick="toggleRenameView({{ habit.id }})"
+                            class="rename-habit-btn">Rename</button>
+                        <!-- Delete Habit Button Form -->
+                        <form style="display: inline-block;" action="{{ url_for('delete_habit', habit_id=habit.id) }}"
+                            method="post" onsubmit="return confirm('Are you sure you want to delete this habit?');">
+                            <button type="submit" class="delete-habit-btn">Delete</button>
+                        </form>
+                    </td>
 
-<script>
-    
-    // Function to toggle the visibility of the admin buttons
-    function toggleAdminButtons() {
-        // Get all the admin action buttons
-        var adminButtons = document.querySelectorAll('.admin-action');
-        adminButtons.forEach(function(button) {
-            if (button.style.display === 'none') {
-                button.style.display = 'block'; // Show the buttons
-            } else {
-                button.style.display = 'none'; // Hide the buttons
+                    <td class="check-in-actions">
+                        <div id="checkInBtnContainer{{ habit.id }}">
+                            <!-- Done Button -->
+                            <form style="display: inline-block;"
+                                action="{{ url_for('mark_habit', habit_id=habit.id, status='done') }}" method="post">
+                                <button class="check-in-action-btn done-btn"
+                                    style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak < 0 else 'opacity: 1;' }}">
+                                    &#10003;</button>
+                            </form>
+                            <!-- Failed Button -->
+                            <form style="display: inline-block;"
+                                action="{{ url_for('mark_habit', habit_id=habit.id, status='failed') }}" method="post">
+                                <button class="check-in-action-btn failed-btn"
+                                    style="{{ 'display: none;' if not already_checked_in or habit.last_checked_in is none or habit.last_checked_in < yesterday_date else 'opacity: 0.3;' if habit.last_checked_in == today_date and habit.streak > 0 else 'opacity: 1;' }}">
+                                    &#10007;</button>
+                            </form>
+
+                        </div>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form action="{{ url_for('delete_all') }}" method="post"
+            onsubmit="return confirm('Are you sure you want to delete all habits?');"
+            class="delete-table-btn-container admin-action" style="display: none;">
+            <button type="submit" class="delete-table-btn">Delete all habits</button>
+        </form>
+    </div>
+
+    <script>
+
+        // Function to toggle the visibility of the admin buttons
+        function toggleAdminButtons() {
+            // Get all the admin action buttons
+            var adminButtons = document.querySelectorAll('.admin-action');
+            adminButtons.forEach(function (button) {
+                if (button.style.display === 'none') {
+                    button.style.display = 'block'; // Show the buttons
+                } else {
+                    button.style.display = 'none'; // Hide the buttons
+                }
+            });
+        }
+
+
+        // Flag to track edit mode state
+        let isEditMode = false;
+
+        function toggleEditButtons() {
+            // Toggle the edit mode state
+            isEditMode = !isEditMode;
+
+            // Select all the action buttons
+            const actionButtons = document.querySelectorAll('.habit-actions');
+            const checkInActions = document.querySelectorAll('.check-in-actions');
+
+            actionButtons.forEach(button => {
+                button.style.display = isEditMode ? 'table-cell' : 'none';
+            });
+
+            checkInActions.forEach(button => {
+                button.style.display = isEditMode ? 'none' : 'table-cell';
+            });
+
+            // Toggle the Add New Habit button if it exists
+            const addHabitBtn = document.getElementById('addHabitBtn');
+            if (addHabitBtn) {
+                addHabitBtn.style.display = isEditMode ? 'block' : 'none';
             }
-        });
-    }
-
-
-// Flag to track edit mode state
-    let isEditMode = false;
-
-    function toggleEditButtons() {
-        // Toggle the edit mode state
-        isEditMode = !isEditMode;
-
-        // Select all the action buttons
-        const actionButtons = document.querySelectorAll('.habit-actions');
-        const checkInActions = document.querySelectorAll('.check-in-actions');
-
-        actionButtons.forEach(button => {
-            button.style.display = isEditMode ? 'table-cell' : 'none';
-        });
-
-        checkInActions.forEach(button => {
-            button.style.display = isEditMode ? 'none' : 'table-cell';
-        });
-
-        // Toggle the Add New Habit button if it exists
-        const addHabitBtn = document.getElementById('addHabitBtn');
-        if (addHabitBtn) {
-            addHabitBtn.style.display = isEditMode ? 'block' : 'none';
         }
-    }
 
 
-</script>
+    </script>
 
-<script>
-    // Function to toggle between view and edit mode for habit names
-    function toggleRenameView(habitId) {
-        var habitNameText = document.getElementById('habitNameText' + habitId);
-        var habitRenameForm = document.getElementById('habitRenameForm' + habitId);
-        if (habitRenameForm.style.display === 'none') {
-            // Show the rename form and hide the static text
-            habitNameText.style.display = 'none';
-            habitRenameForm.style.display = 'block';
-        } else {
-            // Hide the rename form and show the static text
-            habitRenameForm.style.display = 'none';
-            habitNameText.style.display = 'block';
+    <script>
+        // Function to toggle between view and edit mode for habit names
+        function toggleRenameView(habitId) {
+            var habitNameText = document.getElementById('habitNameText' + habitId);
+            var habitRenameForm = document.getElementById('habitRenameForm' + habitId);
+            if (habitRenameForm.style.display === 'none') {
+                // Show the rename form and hide the static text
+                habitNameText.style.display = 'none';
+                habitRenameForm.style.display = 'block';
+            } else {
+                // Hide the rename form and show the static text
+                habitRenameForm.style.display = 'none';
+                habitNameText.style.display = 'block';
+            }
         }
-    }
-</script>
+    </script>
 
-{% if habits|length != 0 %}
+    {% if habits|length != 0 %}
     <!-- Add Habit Button -->
     <div class="add-habit-btn-container habit-actions" style="display: none;">
-        <button class="add-habit-btn" onclick="document.getElementById('addHabitModal').style.display='block'">Add New Habit</button>
+        <button class="add-habit-btn" onclick="document.getElementById('addHabitModal').style.display='block'">Add New
+            Habit</button>
     </div>
 
     <!-- Add Habit Modal -->
@@ -591,7 +670,8 @@
             </form>
         </div>
     </div>
-{%endif%}
+    {%endif%}
 
 </body>
+
 </html>
