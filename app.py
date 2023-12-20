@@ -158,6 +158,16 @@ def check_in():
     return redirect(url_for('index'))
 
 
+@app.route('/undo', methods=['POST'])
+def undo():
+    try:
+        db.session.rollback()  # Rollback the session to the previous state
+        print('Changes undone successfully.')  # Print to console for debugging
+    except Exception as e:
+        print(f'An error occurred: {e}')  # Print the actual error to the console
+    return redirect(url_for('index'))
+
+
 def initialize_database():
     with app.app_context():
         db.create_all()
