@@ -150,7 +150,7 @@ def check_in():
     all_habits = Habit.query.all()
 
     for habit in all_habits:
-        if str(habit.id) in checked_habits:
+        if str(habit.id) in checked_habits and habit.last_checked_in != yesterday:
             update_habit_status(habit, True, yesterday)
         else:
             update_habit_status(habit, False, yesterday)
